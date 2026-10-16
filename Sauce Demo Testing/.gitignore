@@ -1,0 +1,18 @@
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# Allure
+/allure-results/
+/allure-report/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

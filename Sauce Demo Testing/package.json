@@ -1,0 +1,35 @@
+{
+  "name": "sauce-playwright-project",
+  "version": "1.0.0",
+  "description": "Playwright UI automation framework for https://www.saucedemo.com",
+  "main": "playwright.config.js",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:chromium": "playwright test --project=chromium",
+    "test:login": "playwright test tests/login.spec.js",
+    "test:purchase": "playwright test tests/purchase.spec.js",
+    "test:debug": "playwright test --debug",
+    "typecheck": "tsc -p jsconfig.json",
+    "report:html": "playwright show-report",
+    "allure:generate": "allure generate allure-results --clean -o allure-report",
+    "allure:open": "allure open allure-report",
+    "allure": "npm run allure:generate && npm run allure:open"
+  },
+  "keywords": [
+    "playwright",
+    "test-automation",
+    "e2e",
+    "saucedemo",
+    "allure"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^26.6.5",
+    "allure-commandline": "^2.46.1",
+    "allure-playwright": "^3.13.0",
+    "typescript": "^7.0.2"
+  }
+}
