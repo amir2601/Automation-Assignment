@@ -6,7 +6,7 @@ Comprehensive end-to-end automation test suite featuring:
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```plaintext
 Automation-Assignment/
@@ -30,7 +30,7 @@ Automation-Assignment/
 
 ---
 
-## 🚀 1. UI Automation (Playwright)
+## 1. UI Automation (Playwright)
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v18 or higher)
@@ -86,7 +86,7 @@ Automation-Assignment/
 
 ---
 
-## ⚡ 2. API Automation (Postman & Newman)
+## 2. API Automation (Postman & Newman)
 
 Base URL: `https://reqres.in/api`
 
@@ -106,7 +106,7 @@ You can run the collection directly from the command line using Newman:
 
 ---
 
-## 📋 Test Scenarios Covered
+## Test Scenarios Covered
 
 ### UI Automation
 - **Q1 [Mark 10]**: Login with `locked_out_user` and assert the error message:
