@@ -2,21 +2,28 @@
   "info": {
     "_postman_id": "27a9bef5-312b-4993-8597-fa739e840fb4",
     "name": "API Automation",
-    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "50530869",
-    "_collection_link": "https://go.postman.co/collection/50530869-27a9bef5-312b-4993-8597-fa739e840fb4?source=collection_link"
+    "description": "API Automation collection for Reqres.in testing covering Authentication, CRUD operations, and Bad Requests with assertions.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Login",
+      "name": "Q3 - Login",
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "let response = pm.response.json();\n\npm.test(\"Status Code is 200\", () => {\n    pm.response.to.have.status(200);\n})\n\npm.test(\"Capture authToken\", ()=>{\n    pm.expect(response).to.haveOwnProperty(\"token\");\n    pm.collectionVariables.set(\"authToken\", response.token);\n})"
+              "let response = pm.response.json();",
+              "",
+              "pm.test(\"Status Code is 200\", () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Capture authToken\", () => {",
+              "    pm.expect(response).to.haveOwnProperty(\"token\");",
+              "    pm.collectionVariables.set(\"authToken\", response.token);",
+              "});"
             ]
           }
         }
@@ -42,19 +49,33 @@
             "login"
           ]
         },
-        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+        "description": "Logs in with registered credentials and captures the authToken into collection variables."
       },
       "response": []
     },
     {
-      "name": "Get User",
+      "name": "Q4 - Get User",
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "let response = pm.response.json();\n\npm.test(\"Status code is 200\", ()=>{\n    pm.response.to.have.status(200);\n})\n\npm.test(\"Verify Name and Email\", ()=>{\n    pm.expect(response.data.first_name).to.eql(\"Janet\");\n    pm.expect(response.data.last_name).to.eql(\"Weaver\");\n    pm.expect(response.data.email).to.eql(\"janet.weaver@reqres.in\");\n})"
+              "let response = pm.response.json();",
+              "",
+              "pm.test(\"Status code is 200\", () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Verify Name and Email match\", () => {",
+              "    pm.expect(response.data.first_name).to.eql(\"Janet\");",
+              "    pm.expect(response.data.last_name).to.eql(\"Weaver\");",
+              "    pm.expect(response.data.email).to.eql(\"janet.weaver@reqres.in\");",
+              "});",
+              "",
+              "// Store data for subsequent requests and bad request scenarios",
+              "pm.collectionVariables.set(\"storedUserId\", response.data.id.toString());",
+              "pm.collectionVariables.set(\"storedUserEmail\", response.data.email);"
             ]
           }
         }
@@ -63,28 +84,42 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{baseUrl}}/users/2",
+          "raw": "{{baseUrl}}/users/{{userId}}",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
             "users",
-            "2"
+            "{{userId}}"
           ]
         },
-        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+        "description": "Gets user details by userId and verifies name and email."
       },
       "response": []
     },
     {
-      "name": "Update User",
+      "name": "Q5 - Update User",
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "let response = pm.response.json();\r\n\r\npm.test(\"Status code is 200\", ()=>{\r\n    pm.response.to.have.status(200);\r\n})\r\n\r\npm.test(\"Verify updatedAt timestamp\", ()=>{\r\n    pm.expect(response).to.haveOwnProperty(\"updatedAt\");\r\n    pm.expect(response.updatedAt).not.to.be.empty;\r\n})"
+              "let response = pm.response.json();",
+              "",
+              "pm.test(\"Status code is 200\", () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Verify updatedAt timestamp exists and is not empty\", () => {",
+              "    pm.expect(response).to.haveOwnProperty(\"updatedAt\");",
+              "    pm.expect(response.updatedAt).not.to.be.empty;",
+              "});",
+              "",
+              "pm.test(\"Verify updated fields match request body\", () => {",
+              "    pm.expect(response.name).to.eql(\"morpheus\");",
+              "    pm.expect(response.job).to.eql(\"zion resident\");",
+              "});"
             ]
           }
         }
@@ -94,7 +129,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"name\": \"morpheus\",\r\n  \"job\": \"zion resident\"\r\n}",
+          "raw": "{\n  \"name\": \"morpheus\",\n  \"job\": \"zion resident\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -102,27 +137,45 @@
           }
         },
         "url": {
-          "raw": "{{baseUrl}}/users/2",
+          "raw": "{{baseUrl}}/users/{{userId}}",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
             "users",
-            "2"
+            "{{userId}}"
           ]
-        }
+        },
+        "description": "PUT request to update profile, verifying both updatedAt timestamp and the updated name and job fields."
       },
       "response": []
     },
     {
-      "name": "Patch field",
+      "name": "Q6 - Patch field",
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "let response = pm.response.json();\r\n\r\npm.test(\"Status code is 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Verify only job field changed\", () => {\r\n    pm.expect(response.job).to.eql(\"zion resident\");\r\n});"
+              "let response = pm.response.json();",
+              "",
+              "pm.test(\"Status code is 200\", () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Verify patched field changed\", () => {",
+              "    pm.expect(response.job).to.eql(\"zion resident\");",
+              "});",
+              "",
+              "pm.test(\"Verify only that field changed (other fields like name remain untouched)\", () => {",
+              "    pm.expect(response).to.not.have.property(\"name\");",
+              "});",
+              "",
+              "pm.test(\"Verify updatedAt timestamp is present\", () => {",
+              "    pm.expect(response).to.haveOwnProperty(\"updatedAt\");",
+              "    pm.expect(response.updatedAt).not.to.be.empty;",
+              "});"
             ]
           }
         }
@@ -132,7 +185,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"job\": \"zion resident\"\r\n}",
+          "raw": "{\n  \"job\": \"zion resident\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -140,27 +193,132 @@
           }
         },
         "url": {
-          "raw": "{{baseUrl}}/users/2",
+          "raw": "{{baseUrl}}/users/{{userId}}",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
             "users",
-            "2"
+            "{{userId}}"
           ]
-        }
+        },
+        "description": "PATCH request modifying a single field, verifying only that field changed and others were untouched."
       },
       "response": []
     },
     {
-      "name": "Bad Request",
+      "name": "Q8 - Bad Request - Login Missing Password (Stored Data)",
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+              "let response = pm.response.json();",
+              "",
+              "pm.test(\"Status code is 400 Bad Request\", () => {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"Verify error message indicates missing password\", () => {",
+              "    pm.expect(response).to.have.property(\"error\", \"Missing password\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{storedUserEmail}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "login"
+          ]
+        },
+        "description": "Executes a 400 Bad Request using the stored user email without a password."
+      },
+      "response": []
+    },
+    {
+      "name": "Q8 - Bad Request - Register Missing Password (Stored Data)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "let response = pm.response.json();",
+              "",
+              "pm.test(\"Status code is 400 Bad Request\", () => {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"Verify error message for missing registration password\", () => {",
+              "    pm.expect(response).to.have.property(\"error\", \"Missing password\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{storedUserEmail}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "register"
+          ]
+        },
+        "description": "Executes a 400 Bad Request registration using the stored email without password."
+      },
+      "response": []
+    },
+    {
+      "name": "Q8 - Bad Request - User Not Found (Stored Data)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "let baseId = pm.collectionVariables.get(\"storedUserId\") || \"2\";",
+              "pm.collectionVariables.set(\"invalidUserId\", baseId + \"999\");"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 404 Not Found\", () => {",
+              "    pm.response.to.have.status(404);",
+              "});"
             ]
           }
         }
@@ -169,15 +327,16 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{baseUrl}}/users/26",
+          "raw": "{{baseUrl}}/users/{{invalidUserId}}",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
             "users",
-            "26"
+            "{{invalidUserId}}"
           ]
-        }
+        },
+        "description": "Executes a 404 Not Found request deriving an invalid user ID dynamically from the stored user ID."
       },
       "response": []
     }
@@ -188,8 +347,24 @@
       "value": "https://reqres.in/api"
     },
     {
+      "key": "userId",
+      "value": "2"
+    },
+    {
       "key": "authToken",
       "value": ""
+    },
+    {
+      "key": "storedUserId",
+      "value": "2"
+    },
+    {
+      "key": "storedUserEmail",
+      "value": "eve.holt@reqres.in"
+    },
+    {
+      "key": "invalidUserId",
+      "value": "2999"
     }
   ]
 }
