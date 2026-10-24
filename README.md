@@ -1,125 +1,115 @@
-# Automation Testing Assessment
+# Automation Assignment
 
-Comprehensive end-to-end automation test suite featuring:
-1. **UI Automation**: Playwright (JavaScript) with Page Object Model (POM) testing [Sauce Demo](https://www.saucedemo.com/).
-2. **API Automation**: Postman Collection executable via Newman CLI testing [Reqres.in](https://reqres.in/).
-
----
+This repository contains my automated testing suite for both UI and API test scenarios.
 
 ## Project Structure
 
-```plaintext
+```
 Automation-Assignment/
 ├── Api Automation/
-│   └── api_automation.json          # Postman collection (v2.1)
+│   └── api_automation.json
 ├── Sauce Demo Testing/
-│   ├── pageObjects/                 # Page Object Model (POM) classes
+│   ├── pageObjects/
 │   │   ├── basePage.js
 │   │   ├── loginPage.js
 │   │   ├── inventoryPage.js
 │   │   ├── cartPage.js
 │   │   └── checkoutPage.js
-│   ├── tests/                       # Playwright test specs
-│   │   ├── login.spec.js            # Q1: Locked out user verification
-│   │   └── purchase.spec.js         # Q2 & Q3: standard_user & performance_glitch_user journeys
+│   ├── tests/
+│   │   ├── login.spec.js
+│   │   └── purchase.spec.js
 │   ├── package.json
-│   ├── playwright.config.js         # Sequential run & reporter configuration
+│   ├── playwright.config.js
 │   └── README.md
-└── README.md                        # Main project documentation
+└── README.md
 ```
 
----
+## UI Automation (Playwright)
 
-## 1. UI Automation (Playwright)
+Target site: https://www.saucedemo.com/
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- npm (comes with Node.js)
+The UI tests are built using Playwright with JavaScript following the Page Object Model (POM) pattern. Tests are set up to run sequentially to avoid state conflicts.
 
-### Setup Instructions
-1. Navigate to the UI automation directory:
-   ```bash
-   cd "Sauce Demo Testing"
-   ```
+### Setup
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+Open terminal in the Sauce Demo Testing folder:
 
-3. Install Playwright browser binaries:
-   ```bash
-   npx playwright install
-   ```
+```bash
+cd "Sauce Demo Testing"
+npm install
+npx playwright install
+```
 
-### Execution Steps
-- **Run all UI tests sequentially:**
-  ```bash
-  npm test
-  ```
-- **Run on Chromium only:**
-  ```bash
-  npm run test:chromium
-  ```
-- **Run specific test files:**
-  ```bash
-  # Run locked out user login test (Q1)
-  npm run test:login
+### Running the Tests
 
-  # Run full purchase journeys (Q2 & Q3)
-  npm run test:purchase
-  ```
-- **Run tests in headed mode (visible browser):**
-  ```bash
-  npm run test:headed
-  ```
+Run all tests:
+```bash
+npm test
+```
 
-### Test Reports
-- **Playwright HTML Report:**
-  ```bash
-  npm run report:html
-  ```
-- **Allure Report:**
-  ```bash
-  npm run allure
-  ```
+Run tests on Chromium:
+```bash
+npm run test:chromium
+```
 
----
+Run specific test files:
+```bash
+npm run test:login
+npm run test:purchase
+```
 
-## 2. API Automation (Postman & Newman)
+Run in headed mode (with browser window visible):
+```bash
+npm run test:headed
+```
 
-Base URL: `https://reqres.in/api`
+### Viewing Reports
 
-### Execution via Newman (Command Line)
-You can run the collection directly from the command line using Newman:
+Playwright HTML report:
+```bash
+npm run report:html
+```
 
-1. From the project root, run:
-   ```bash
-   npx newman run "Api Automation/api_automation.json"
-   ```
-   *(Or install Newman globally: `npm install -g newman` and run `newman run "Api Automation/api_automation.json"`)*
+Allure report:
+```bash
+npm run allure
+```
 
-### Execution via Postman GUI
-1. Open the Postman Desktop application.
-2. Click **Import** and select `Api Automation/api_automation.json`.
-3. Open the **API Automation** collection and click **Run collection**.
+## API Automation (Reqres.in)
 
----
+Base URL: https://reqres.in/api
 
-## Test Scenarios Covered
+The API collection is built in Postman and can be executed either directly in Postman or via Newman in the command line.
 
-### UI Automation
-- **Q1 [Mark 10]**: Login with `locked_out_user` and assert the error message:
-  `Epic sadface: Sorry, this user has been locked out.`.
-- **Q2 [Mark 20]**: Login with `standard_user`, reset App State, dynamically add 3 items to cart, proceed to checkout, verify product names and total price calculation, complete order, reset App State, and log out.
-- **Q3 [Mark 10]**: Login with `performance_glitch_user`, reset App State, sort products (Z to A), add first product, complete checkout journey with price & item verification, reset App State, and log out.
+### Running with Newman
 
-### API Automation
-- **Q3 [Mark 10]**: `POST /login` with registered credentials and capture `authToken` into collection variable.
-- **Q4 [Mark 10]**: `GET /users/{{userId}}` to retrieve user details and assert name and email match; captures user info into variables.
-- **Q5 [Mark 10]**: `PUT /users/{{userId}}` to update profile, verifying both the `updatedAt` timestamp and that updated fields (`name`, `job`) match the payload.
-- **Q6 [Mark 10]**: `PATCH /users/{{userId}}` to update a single field (`job`), verifying the field updated, `updatedAt` is generated, and other fields (e.g. `name`) were not modified.
-- **Q8 [Mark 20]**: Execute multiple bad request scenarios using stored data and assert 4xx status codes:
-  1. `POST /login` without password using stored user email (`400 Bad Request`).
-  2. `POST /register` without password using stored user email (`400 Bad Request`).
-  3. `GET /users/{{invalidUserId}}` using dynamically derived non-existent ID from stored ID (`404 Not Found`).
+From the repository root folder, run:
+
+```bash
+npx newman run "Api Automation/api_automation.json"
+```
+
+### Running with Postman
+
+1. Open Postman.
+2. Click Import and choose `Api Automation/api_automation.json`.
+3. Run the collection using Postman Collection Runner.
+
+## Test Scenarios Overview
+
+### UI Tests
+
+1. Locked out user: Logs in with locked_out_user and validates the error message.
+2. Standard user checkout flow: Logs in with standard_user, resets app state, randomly selects 3 items, verifies items and total price on checkout overview, completes the order, resets app state again, and logs out.
+3. Performance glitch user flow: Logs in with performance_glitch_user, resets app state, sorts products Z to A, adds the first product, finishes checkout with verification, resets app state, and logs out.
+
+### API Tests
+
+1. Login and capture token: Submits valid login credentials and saves authToken into collection variables.
+2. Get user details: Retrieves user information by user ID and asserts name and email match.
+3. Update user profile (PUT): Updates user profile and validates both the updatedAt timestamp and the updated name and job fields.
+4. Patch user field (PATCH): Modifies the job field and verifies only that field was updated while other profile fields remained untouched.
+5. Bad requests using stored data:
+   - Login without password using stored user email (asserts 400 Bad Request).
+   - Registration without password using stored user email (asserts 400 Bad Request).
+   - Get user with non-existent ID derived from stored user ID (asserts 404 Not Found).

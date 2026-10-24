@@ -2,12 +2,12 @@
   "info": {
     "_postman_id": "27a9bef5-312b-4993-8597-fa739e840fb4",
     "name": "API Automation",
-    "description": "API Automation collection for Reqres.in testing covering Authentication, CRUD operations, and Bad Requests with assertions.",
+    "description": "Postman collection for testing Reqres.in API endpoints, covering authentication, CRUD operations, and negative test cases using stored variables.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Q3 - Login",
+      "name": "Login and Capture Token",
       "event": [
         {
           "listen": "test",
@@ -16,7 +16,7 @@
             "exec": [
               "let response = pm.response.json();",
               "",
-              "pm.test(\"Status Code is 200\", () => {",
+              "pm.test(\"Status code is 200\", () => {",
               "    pm.response.to.have.status(200);",
               "});",
               "",
@@ -49,12 +49,12 @@
             "login"
           ]
         },
-        "description": "Logs in with registered credentials and captures the authToken into collection variables."
+        "description": "Login using registered credentials and save authToken to collection variables."
       },
       "response": []
     },
     {
-      "name": "Q4 - Get User",
+      "name": "Get User Details",
       "event": [
         {
           "listen": "test",
@@ -73,7 +73,6 @@
               "    pm.expect(response.data.email).to.eql(\"janet.weaver@reqres.in\");",
               "});",
               "",
-              "// Store data for subsequent requests and bad request scenarios",
               "pm.collectionVariables.set(\"storedUserId\", response.data.id.toString());",
               "pm.collectionVariables.set(\"storedUserEmail\", response.data.email);"
             ]
@@ -93,12 +92,12 @@
             "{{userId}}"
           ]
         },
-        "description": "Gets user details by userId and verifies name and email."
+        "description": "Fetch user by ID and store user information for next requests."
       },
       "response": []
     },
     {
-      "name": "Q5 - Update User",
+      "name": "Update User Profile (PUT)",
       "event": [
         {
           "listen": "test",
@@ -111,12 +110,12 @@
               "    pm.response.to.have.status(200);",
               "});",
               "",
-              "pm.test(\"Verify updatedAt timestamp exists and is not empty\", () => {",
+              "pm.test(\"Verify updatedAt timestamp is present\", () => {",
               "    pm.expect(response).to.haveOwnProperty(\"updatedAt\");",
               "    pm.expect(response.updatedAt).not.to.be.empty;",
               "});",
               "",
-              "pm.test(\"Verify updated fields match request body\", () => {",
+              "pm.test(\"Verify updated fields match request\", () => {",
               "    pm.expect(response.name).to.eql(\"morpheus\");",
               "    pm.expect(response.job).to.eql(\"zion resident\");",
               "});"
@@ -146,12 +145,12 @@
             "{{userId}}"
           ]
         },
-        "description": "PUT request to update profile, verifying both updatedAt timestamp and the updated name and job fields."
+        "description": "Update user profile and verify both the updatedAt timestamp and the updated fields."
       },
       "response": []
     },
     {
-      "name": "Q6 - Patch field",
+      "name": "Patch User Field (PATCH)",
       "event": [
         {
           "listen": "test",
@@ -164,11 +163,11 @@
               "    pm.response.to.have.status(200);",
               "});",
               "",
-              "pm.test(\"Verify patched field changed\", () => {",
+              "pm.test(\"Verify patched field updated\", () => {",
               "    pm.expect(response.job).to.eql(\"zion resident\");",
               "});",
               "",
-              "pm.test(\"Verify only that field changed (other fields like name remain untouched)\", () => {",
+              "pm.test(\"Verify other fields were not changed\", () => {",
               "    pm.expect(response).to.not.have.property(\"name\");",
               "});",
               "",
@@ -202,12 +201,12 @@
             "{{userId}}"
           ]
         },
-        "description": "PATCH request modifying a single field, verifying only that field changed and others were untouched."
+        "description": "Partially update user job and check that other fields were not modified."
       },
       "response": []
     },
     {
-      "name": "Q8 - Bad Request - Login Missing Password (Stored Data)",
+      "name": "Bad Request: Login Without Password",
       "event": [
         {
           "listen": "test",
@@ -248,12 +247,12 @@
             "login"
           ]
         },
-        "description": "Executes a 400 Bad Request using the stored user email without a password."
+        "description": "Negative test sending login request using stored user email with missing password."
       },
       "response": []
     },
     {
-      "name": "Q8 - Bad Request - Register Missing Password (Stored Data)",
+      "name": "Bad Request: Register Without Password",
       "event": [
         {
           "listen": "test",
@@ -294,12 +293,12 @@
             "register"
           ]
         },
-        "description": "Executes a 400 Bad Request registration using the stored email without password."
+        "description": "Negative test registering using stored user email without providing password."
       },
       "response": []
     },
     {
-      "name": "Q8 - Bad Request - User Not Found (Stored Data)",
+      "name": "Bad Request: Non-Existent User ID",
       "event": [
         {
           "listen": "prerequest",
@@ -336,7 +335,7 @@
             "{{invalidUserId}}"
           ]
         },
-        "description": "Executes a 404 Not Found request deriving an invalid user ID dynamically from the stored user ID."
+        "description": "Negative test requesting an invalid user ID derived dynamically from stored ID."
       },
       "response": []
     }

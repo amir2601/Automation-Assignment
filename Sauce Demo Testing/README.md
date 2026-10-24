@@ -1,43 +1,51 @@
-# Sauce Demo - Playwright UI Automation
+# Sauce Demo UI Automation
 
-Automated end-to-end testing suite for [Sauce Demo](https://www.saucedemo.com/) using Playwright and Page Object Model (POM) pattern.
+Playwright test automation for https://www.saucedemo.com/
 
-## Features
-- **Page Object Model (POM)**: Dedicated page classes for Login, Inventory, Cart, and Checkout pages.
-- **Dynamic Product Selection**: Randomized item selection logic for purchase journeys.
-- **Sequential Execution**: Configured with `fullyParallel: false` and `workers: 1` as per assessment requirements.
-- **Multi-Reporting**: Integrated Playwright HTML and Allure reporting.
+## Overview
 
-## Setup & Installation
+This project implements end-to-end UI tests using Playwright and the Page Object Model (POM) pattern. It covers user authentication, dynamic item selection, cart management, and checkout verification.
+
+## Setup
+
+Install required packages and browser binaries:
+
 ```bash
-# Install dependencies
 npm install
-
-# Install browsers
 npx playwright install
 ```
 
 ## Running Tests
+
+Run all tests sequentially:
 ```bash
-# Run all tests sequentially
 npm test
+```
 
-# Run tests on Chromium only
+Run tests on Chromium:
+```bash
 npm run test:chromium
+```
 
-# Run specific specs
+Run individual test files:
+```bash
 npm run test:login
 npm run test:purchase
+```
 
-# Headed mode
+Run in headed mode:
+```bash
 npm run test:headed
 ```
 
-## Viewing Reports
-```bash
-# Playwright HTML Report
-npm run report:html
+## Test Reports
 
-# Allure Report
+Generate and open Playwright report:
+```bash
+npm run report:html
+```
+
+Generate and open Allure report:
+```bash
 npm run allure
 ```
